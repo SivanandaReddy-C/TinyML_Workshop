@@ -1,0 +1,168 @@
+ST Edge AI Core v2.2.0-20266 2adc00962
+Created date          : 2026-07-15 16:51:31
+Parameters            : generate --target stm32l4 --name network -m D:/Nitte_TinyML_Workshop/TinyML_Workshop/simple_model.onnx --compression none --verbosity 1 --workspace C:/Users/MIT/AppData/Local/Temp/mxAI_workspace54300123266009693366852993028229 --output C:/Users/MIT/.stm32cubemx/network_output
+
+Exec/report summary (generate)
+--------------------------------------------------------------------------------------------------------
+model file         :   D:\Nitte_TinyML_Workshop\TinyML_Workshop\simple_model.onnx                       
+type               :   onnx                                                                             
+c_name             :   network                                                                          
+compression        :   none                                                                             
+options            :   allocate-inputs, allocate-outputs                                                
+optimization       :   balanced                                                                         
+target/series      :   stm32l4                                                                          
+workspace dir      :   C:\Users\MIT\AppData\Local\Temp\mxAI_workspace54300123266009693366852993028229   
+output dir         :   C:\Users\MIT\.stm32cubemx\network_output                                         
+model_fmt          :   float                                                                            
+model_name         :   simple_model                                                                     
+model_hash         :   0xc5f34db57fb4ee0aa68685d5d7eecedc                                               
+params #           :   58 items (232 B)                                                                 
+--------------------------------------------------------------------------------------------------------
+input 1/1          :   'input', f32(1x4), 16 Bytes, activations                                         
+output 1/1         :   'output', f32(1x2), 8 Bytes, activations                                         
+macc               :   66                                                                               
+weights (ro)       :   232 B (232 B) (1 segment)                                                        
+activations (rw)   :   48 B (48 B) (1 segment) *                                                        
+ram (total)        :   48 B (48 B) = 48 + 0 + 0                                                         
+--------------------------------------------------------------------------------------------------------
+(*) 'input'/'output' buffers are allocated in the activations buffer
+
+Model name - simple_model
+------ ----------------------------------- ----------- ------------ ------ --------------- --- -------------- -------------- ------------------ 
+m_id   layer (type,original)               oshape      param/size     macc    connected to   | c_size         c_macc         c_type             
+------ ----------------------------------- ----------- ------------ ------ --------------- --- -------------- -------------- ------------------ 
+1      node_0.weight (Placeholder, Gemm)   [b:8,c:4]   32/128                                | +32(+25.0%)    +40(+100.0%)   Dense_[0]          
+       node_0.bias (Placeholder, Gemm)     [b:8]       8/32                                  | -32(-100.0%)                  
+------ ----------------------------------- ----------- ------------ ------ --------------- --- -------------- -------------- ------------------ 
+3      node_2.weight (Placeholder, Gemm)   [b:2,c:8]   16/64                                 | +8(+12.5%)     +18(+100.0%)   Dense_[o][2]       
+       node_2.bias (Placeholder, Gemm)     [b:2]       2/8                                   | -8(-100.0%)                   
+------ ----------------------------------- ----------- ------------ ------ --------------- --- -------------- -------------- ------------------ 
+0      input (Input, )                     [b:1,c:4]                                         |                               
+------ ----------------------------------- ----------- ------------ ------ --------------- --- -------------- -------------- ------------------ 
+1      linear (Gemm, Gemm)                 [b:1,c:8]                    40           input   |                -40(-100.0%)   
+                                                                             node_0.weight   | 
+                                                                               node_0.bias   | 
+------ ----------------------------------- ----------- ------------ ------ --------------- --- -------------- -------------- ------------------ 
+2      relu (Nonlinearity, Relu)           [b:1,c:8]                     8          linear   |                               Nonlinearity_[1]   
+------ ----------------------------------- ----------- ------------ ------ --------------- --- -------------- -------------- ------------------ 
+3      output (Gemm, Gemm)                 [b:1,c:2]                    18            relu   |                -18(-100.0%)   
+                                                                             node_2.weight   | 
+                                                                               node_2.bias   | 
+------ ----------------------------------- ----------- ------------ ------ --------------- --- -------------- -------------- ------------------ 
+model/c-model: macc=66/66  weights=232/232  activations=--/48 io=--/0
+
+
+
+Generated C-graph summary
+------------------------------------------------------------------------------------------------------------------------
+model name            : simple_model
+c-name                : network
+c-node #              : 3
+c-array #             : 8
+activations size      : 48 (1 segment)
+weights size          : 232 (1 segment)
+macc                  : 66
+inputs                : ['input_output']
+outputs               : ['output_output']
+
+C-Arrays (8)
+------ ---------------- ----------- ------------------------- ------------- --------- 
+c_id   name (*_array)   item/size   domain/mem-pool           c-type        comment   
+------ ---------------- ----------- ------------------------- ------------- --------- 
+0      input_output     4/16        activations/**default**   float         /input    
+1      linear_bias      8/32        weights/weights           const float             
+2      linear_output    8/32        activations/**default**   float                   
+3      linear_weights   32/128      weights/weights           const float             
+4      output_bias      2/8         weights/weights           const float             
+5      output_output    2/8         activations/**default**   float         /output   
+6      output_weights   16/64       weights/weights           const float             
+7      relu_output      8/32        activations/**default**   float                   
+------ ---------------- ----------- ------------------------- ------------- --------- 
+
+C-Layers (3)
+------ ---------------- ---- --------------- ------ ----- ------------------- ------------------ 
+c_id   name (*_layer)   id   layer_type      macc   rom   tensors             shape (array id)   
+------ ---------------- ---- --------------- ------ ----- ------------------- ------------------ 
+0      linear           1    Dense           40     160   I: input_output     f32(1x4) (0)       
+                                                          W: linear_weights   f32(8x4) (3)       
+                                                          W: linear_bias      f32(8) (1)         
+                                                          O: linear_output    f32(1x8) (2)       
+------ ---------------- ---- --------------- ------ ----- ------------------- ------------------ 
+1      relu             2    Nonlinearity    8      0     I: linear_output    f32(1x8) (2)       
+                                                          O: relu_output      f32(1x8) (7)       
+------ ---------------- ---- --------------- ------ ----- ------------------- ------------------ 
+2      output           3    Dense           18     72    I: relu_output      f32(1x8) (7)       
+                                                          W: output_weights   f32(2x8) (6)       
+                                                          W: output_bias      f32(2) (4)         
+                                                          O: output_output    f32(1x2) (5)       
+------ ---------------- ---- --------------- ------ ----- ------------------- ------------------ 
+
+
+
+Number of operations per c-layer
+------- ------ --------------------- ----- -------------- 
+c_id    m_id   name (type)             #op           type 
+------- ------ --------------------- ----- -------------- 
+0       1      linear (Dense)           40   smul_f32_f32 
+1       2      relu (Nonlinearity)       8     op_f32_f32 
+2       3      output (Dense)           18   smul_f32_f32 
+------- ------ --------------------- ----- -------------- 
+total                                   66 
+
+Number of operation types
+---------------- ---- ----------- 
+operation type      #           % 
+---------------- ---- ----------- 
+smul_f32_f32       58       87.9% 
+op_f32_f32          8       12.1% 
+
+Complexity report (model)
+------ --------------- ------------------------- ------------------------- ------ 
+m_id   name            c_macc                    c_rom                     c_id   
+------ --------------- ------------------------- ------------------------- ------ 
+1      node_0.weight   ||||||||||||||||  60.6%   ||||||||||||||||  69.0%   [0]    
+3      node_2.weight   |||||||           27.3%   |||||||           31.0%   [2]    
+2      relu            ||||              12.1%   |                  0.0%   [1]    
+------ --------------- ------------------------- ------------------------- ------ 
+macc=66 weights=232 act=48 ram_io=0
+ 
+ Requested memory size by section - "stm32l4" target
+ ------------------------------ ------- -------- ------- ----- 
+ module                            text   rodata    data   bss 
+ ------------------------------ ------- -------- ------- ----- 
+ NetworkRuntime1020_CM4_GCC.a     6,452        0       0     0 
+ network.o                          460       24   1,100   128 
+ network_data.o                      48       16      88     0 
+ lib (toolchain)*                     0        0       0     0 
+ ------------------------------ ------- -------- ------- ----- 
+ RT total**                       6,960       40   1,188   128 
+ ------------------------------ ------- -------- ------- ----- 
+ weights                              0      232       0     0 
+ activations                          0        0       0    48 
+ io                                   0        0       0     0 
+ ------------------------------ ------- -------- ------- ----- 
+ TOTAL                            6,960      272   1,188   176 
+ ------------------------------ ------- -------- ------- ----- 
+ *  toolchain objects (libm/libgcc*)
+ ** RT AI runtime objects (kernels+infrastructure)
+  
+  Summary - "stm32l4" target
+  ---------------------------------------------------
+               FLASH (ro)      %*   RAM (rw)       % 
+  ---------------------------------------------------
+  RT total          8,188   97.2%      1,316   96.5% 
+  ---------------------------------------------------
+  TOTAL             8,420              1,364         
+  ---------------------------------------------------
+  *  rt/total
+
+
+Generated files (7)
+---------------------------------------------------------------- 
+C:\Users\MIT\.stm32cubemx\network_output\network_data_params.h   
+C:\Users\MIT\.stm32cubemx\network_output\network_data_params.c   
+C:\Users\MIT\.stm32cubemx\network_output\network_data.h          
+C:\Users\MIT\.stm32cubemx\network_output\network_data.c          
+C:\Users\MIT\.stm32cubemx\network_output\network_config.h        
+C:\Users\MIT\.stm32cubemx\network_output\network.h               
+C:\Users\MIT\.stm32cubemx\network_output\network.c               
