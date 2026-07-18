@@ -149,7 +149,7 @@ int main(void)
   HAL_Init();
 
   /* USER CODE BEGIN Init */
-  MPU6050_Init();
+
   /* USER CODE END Init */
 
   /* Configure the system clock */
@@ -168,6 +168,10 @@ int main(void)
   printf("Random Forest STM32 Demo\r\n");
 
   MX_X_CUBE_AI_Init();
+
+  MPU6050_Init();
+  CoreDebug->DEMCR |= CoreDebug_DEMCR_TRCENA_Msk;
+  DWT->CTRL |= DWT_CTRL_CYCCNTENA_Msk;
   /* USER CODE END 2 */
 
   /* Infinite loop */
@@ -203,7 +207,36 @@ int main(void)
 	  printf("\n");
 
 	  /* Run inference */
-	  AI_Run();
+	  uint64_t total_cycles = 0;
+
+	  for(int i = 0; i < 1000; i++)
+	  {
+
+
+	      uint32_t start = DWT->CYCCNT;
+
+	      AI_Run();
+
+	      uint32_t end = DWT->CYCCNT;
+
+	      DWT->CYCCNT = 0;
+
+	      total_cycles += (end - start);
+	  }
+
+	  uint32_t avg_cycles = total_cycles / 1000;
+
+	  printf("CPU Cycles : %lu\r\n", avg_cycles);
+
+	  float latency_ms =
+	  ((float)avg_cycles / 120000000.0f) * 1000.0f;
+
+	  printf("Latency : %.3f ms\r\n", latency_ms);
+
+	  float throughput =
+	  1000.0f/latency_ms;
+
+	  printf("Throughput : %.2f inf/sec\r\n",throughput);
 
 	  HAL_Delay(200);
   }

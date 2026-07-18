@@ -1,14 +1,14 @@
-16:18:24 **** Incremental Build of configuration Debug for project STM32_ClassicML_Deployment ****
+17:15:04 **** Incremental Build of configuration Debug for project STM32_ClassicML_Deployment ****
 make -j28 all 
 arm-none-eabi-size  STM32_ClassicML_Deployment.elf 
    text	   data	    bss	    dec	    hex	filename
-1362196	   2324	   5052	1369572	 14e5e4	STM32_ClassicML_Deployment.elf
+1362500	   2324	   5052	1369876	 14e714	STM32_ClassicML_Deployment.elf
 Finished building: default.size.stdout
  
-16:18:29 **** Incremental Build of configuration Debug for project STM32_ClassicML_Deployment ****
+17:15:15 **** Incremental Build of configuration Debug for project STM32_ClassicML_Deployment ****
 make -j28 all 
 arm-none-eabi-size  STM32_ClassicML_Deployment.elf 
    text	   data	    bss	    dec	    hex	filename
-1362196	   2324	   5052	1369572	 14e5e4	STM32_ClassicML_Deployment.elf
+1362500	   2324	   5052	1369876	 14e714	STM32_ClassicML_Deployment.elf
 Finished building: default.size.stdout
  
