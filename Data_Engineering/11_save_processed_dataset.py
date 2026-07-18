@@ -16,4 +16,15 @@ df["Label"] = encoder.fit_transform(df["Label"])
 # Save processed dataset
 df.to_csv("../Datasets/dataset_processed.csv", index=False)
 
+print("\n=== Min-Max Scaler Parameters ===")
+
+for feature, dmin, dmax in zip(
+        features,
+        scaler.data_min_,
+        scaler.data_max_):
+
+    print(f"{feature}")
+    print(f"  Min : {dmin}")
+    print(f"  Max : {dmax}")
+
 print("Processed dataset saved successfully!")
