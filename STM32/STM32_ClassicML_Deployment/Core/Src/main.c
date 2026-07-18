@@ -26,6 +26,7 @@
 #include "network.h"
 #include "network_data.h"
 #include "network_data_params.h"
+#include "mpu.h"
 /* USER CODE END Includes */
 
 /* Private typedef -----------------------------------------------------------*/
@@ -58,14 +59,26 @@ static ai_buffer *ai_input;
 static ai_buffer *ai_output;
 
 /* Input Features */
-float input_data[6] =
+float input_data[6];
+
+const float feature_min[6] =
 {
-    5.1f,
-    3.5f,
-    1.4f,
-    0.2f,
-    0.0f,
-    0.0f
+    -2.000f,
+    -2.000f,
+    -2.000f,
+    -250.137f,
+    -250.137f,
+    -250.137f
+};
+
+const float feature_max[6] =
+{
+     2.000f,
+     1.749f,
+     2.000f,
+     250.130f,
+     250.130f,
+     250.130f
 };
 
 /* Predicted Label */
@@ -81,7 +94,8 @@ static void MX_GPIO_Init(void);
 static void MX_I2C1_Init(void);
 static void MX_USART1_UART_Init(void);
 /* USER CODE BEGIN PFP */
-
+void Normalize_Features(void);
+void AI_Run(void);
 /* USER CODE END PFP */
 
 /* Private user code ---------------------------------------------------------*/
@@ -115,6 +129,7 @@ void MX_X_CUBE_AI_Init(void)
 
     printf("AI Initialized Successfully\r\n");
 }
+
 /* USER CODE END 0 */
 
 /**
@@ -134,7 +149,7 @@ int main(void)
   HAL_Init();
 
   /* USER CODE BEGIN Init */
-
+  MPU6050_Init();
   /* USER CODE END Init */
 
   /* Configure the system clock */
@@ -162,9 +177,35 @@ int main(void)
     /* USER CODE END WHILE */
 
     /* USER CODE BEGIN 3 */
+	  MPU6050_Read_Accel(accel_data);
+	  MPU6050_Read_Gyro(gyro_data);
+
+	  /* Build feature vector */
+	  input_data[0] = Ax;
+	  input_data[1] = Ay;
+	  input_data[2] = Az;
+	  input_data[3] = Gx;
+	  input_data[4] = Gy;
+	  input_data[5] = Gz;
+
+	  /* Normalize */
+	  Normalize_Features();
+
+	  printf("\nRaw Sensor Values\n");
+	  printf("\nAx = %.3f  Ay = %.3f  Az = %.3f\n", Ax, Ay, Az);
+	  printf("\nGx = %.3f  Gy = %.3f  Gz = %.3f\n", Gx, Gy, Gz);
+
+	  printf("\nNormalized Features\n");
+	  for(int i = 0; i < 6; i++)
+	  {
+	      printf("%.3f ", input_data[i]);
+	  }
+	  printf("\n");
+
+	  /* Run inference */
 	  AI_Run();
 
-	  HAL_Delay(3000);
+	  HAL_Delay(200);
   }
   /* USER CODE END 3 */
 }
@@ -339,6 +380,23 @@ int _write(int file, char *ptr, int len)
 {
     HAL_UART_Transmit(&huart1, (uint8_t*)ptr, len, HAL_MAX_DELAY);
     return len;
+}
+
+void Normalize_Features(void)
+{
+    for(int i = 0; i < 6; i++)
+    {
+        input_data[i] =
+            (input_data[i] - feature_min[i]) /
+            (feature_max[i] - feature_min[i]);
+
+        /* Optional safety clipping */
+        if(input_data[i] < 0.0f)
+            input_data[i] = 0.0f;
+
+        if(input_data[i] > 1.0f)
+            input_data[i] = 1.0f;
+    }
 }
 
 void AI_Run(void)
