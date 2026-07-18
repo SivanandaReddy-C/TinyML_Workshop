@@ -1,0 +1,10 @@
+15:31:41 **** Incremental Build of configuration Debug for project STM32_ClassicML_Deployment ****
+make -j28 all 
+arm-none-eabi-size  STM32_ClassicML_Deployment.elf 
+   text	   data	    bss	    dec	    hex	filename
+1358316	   2348	   4988	1365652	 14d694	STM32_ClassicML_Deployment.elf
+Finished building: default.size.stdout
+ 
+
+15:31:41 Build Finished. 0 errors, 0 warnings. (took 332ms)
+

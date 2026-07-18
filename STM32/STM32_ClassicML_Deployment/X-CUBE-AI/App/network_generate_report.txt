@@ -1,0 +1,173 @@
+ST Edge AI Core v2.2.0-20266 2adc00962
+Created date          : 2026-07-18 15:14:01
+Parameters            : generate --target stm32l4 --name network -m D:/Nitte_TinyML_Workshop/TinyML_Workshop/ONNX/random_forest_model.onnx --compression none --verbosity 1 --workspace C:/Users/MIT/AppData/Local/Temp/mxAI_workspace10644430871720013208914831840066143 --output C:/Users/MIT/.stm32cubemx/network_output
+
+Exec/report summary (generate)
+-----------------------------------------------------------------------------------------------------------
+model file         :   D:\Nitte_TinyML_Workshop\TinyML_Workshop\ONNX\random_forest_model.onnx              
+type               :   onnx                                                                                
+c_name             :   network                                                                             
+compression        :   none                                                                                
+options            :   allocate-inputs, allocate-outputs                                                   
+optimization       :   balanced                                                                            
+target/series      :   stm32l4                                                                             
+workspace dir      :   C:\Users\MIT\AppData\Local\Temp\mxAI_workspace10644430871720013208914831840066143   
+output dir         :   C:\Users\MIT\.stm32cubemx\network_output                                            
+model_fmt          :   undefined                                                                           
+model_name         :   random_forest_model                                                                 
+model_hash         :   0x466dd894ca94a1b3c9ad547900468cbf                                                  
+params #           :   520,842 items (1.25 MiB)                                                            
+-----------------------------------------------------------------------------------------------------------
+input 1/1          :   'float_input', f32(1x1x6), 24 Bytes, activations                                    
+output 1/2         :   'label0', int32(1x1), 4 Bytes, activations                                          
+output 2/2         :   'output_probability', f32(1x1x5x2), 40 Bytes, activations                           
+outputs (total)    :   44 Bytes                                                                            
+macc               :   1,311                                                                               
+weights (ro)       :   1,313,296 B (1.25 MiB) (1 segment) / -770,072(-37.0%) vs float model                
+activations (rw)   :   64 B (64 B) (1 segment) *                                                           
+ram (total)        :   64 B (64 B) = 64 + 0 + 0                                                            
+-----------------------------------------------------------------------------------------------------------
+(*) 'input'/'output' buffers are allocated in the activations buffer
+
+Model name - random_forest_model
+------ -------------------------------------------------------- ---------------- ------------------- ------- -------------- --- -------- ------------- ------------------------------- 
+m_id   layer (type,original)                                    oshape           param/size             macc   connected to   | c_size   c_macc        c_type                          
+------ -------------------------------------------------------- ---------------- ------------------- ------- -------------- --- -------- ------------- ------------------------------- 
+0      float_input (Input, )                                    [h:1,c:6]                                                     |                        
+------ -------------------------------------------------------- ---------------- ------------------- ------- -------------- --- -------- ------------- ------------------------------- 
+1      label (TreeEnsembleClassifier, TreeEnsembleClassifier)   [c:1][h:1,c:5]   520,837/1,313,282     1,311    float_input   |                        TreeEnsembleClassifier_[o][0]   
+------ -------------------------------------------------------- ---------------- ------------------- ------- -------------- --- -------- ------------- ------------------------------- 
+2      output_label (Cast, Cast)                                [c:1]                                      2          label   |          -2(-100.0%)   
+------ -------------------------------------------------------- ---------------- ------------------- ------- -------------- --- -------- ------------- ------------------------------- 
+3      output_probability (ZipMap, ZipMap)                      [h:1,w:5,c:2]    5/5                                  label   |                        ZipMap_[o][1]                   
+------ -------------------------------------------------------- ---------------- ------------------- ------- -------------- --- -------- ------------- ------------------------------- 
+model/c-model: macc=1,313/1,311 -2(-0.2%) weights=1,313,287/1,313,296 +9(+0.0%) activations=--/64 io=--/0
+
+
+
+Generated C-graph summary
+------------------------------------------------------------------------------------------------------------------------
+model name            : random_forest_model
+c-name                : network
+c-node #              : 2
+c-array #             : 17
+activations size      : 64 (1 segment)
+weights size          : 1313296 (1 segment)
+macc                  : 1311
+inputs                : ['float_input_output']
+outputs               : ['label_output0', 'output_probability_output']
+
+C-Arrays (17)
+------ ------------------------------------- --------------- ------------------------- ------------- --------- 
+c_id   name (*_array)                        item/size       domain/mem-pool           c-type        comment   
+------ ------------------------------------- --------------- ------------------------- ------------- --------- 
+0      float_input_output                    6/24            activations/**default**   float         /input    
+1      label_base_values                     5/20            weights/weights           const float             
+2      label_branch_mode                     100/100         weights/weights           const u8                
+3      label_class_ids                       113245/226490   weights/weights           const u16               
+4      label_class_nodeids                   113245/226490   weights/weights           const u16               
+5      label_class_weights                   113245/452980   weights/weights           const float             
+6      label_classlabels_int64s              5/20            weights/weights           const s32               
+7      label_nb_class_by_estimator           100/200         weights/weights           const u16               
+8      label_nb_node_by_estimator            100/200         weights/weights           const u16               
+9      label_nodes_falsenodeids              45198/90396     weights/weights           const u16               
+10     label_nodes_featureids                45198/45198     weights/weights           const u8                
+11     label_nodes_truenodeids               45198/90396     weights/weights           const u16               
+12     label_nodes_values                    45198/180792    weights/weights           const float             
+13     label_output0                         1/4             activations/**default**   s32           /output   
+14     label_output1                         5/20            activations/**default**   float                   
+15     output_probability_classlabels_ints   5/5             weights/weights           const u8                
+16     output_probability_output             10/40           activations/**default**   float         /output   
+------ ------------------------------------- --------------- ------------------------- ------------- --------- 
+
+C-Layers (2)
+------ -------------------- ---- ------------------------- ------ --------- ---------------------------------------- -------------------- 
+c_id   name (*_layer)       id   layer_type                macc   rom       tensors                                  shape (array id)     
+------ -------------------- ---- ------------------------- ------ --------- ---------------------------------------- -------------------- 
+0      label                1    TreeEnsembleClassifier    1311   1313282   I: float_input_output                    f32(1x1x6) (0)       
+                                                                            W: label_branch_mode                     uint8(100) (2)       
+                                                                            W: label_nodes_featureids                uint8(45198) (10)    
+                                                                            W: label_nodes_values                    f32(45198) (12)      
+                                                                            W: label_nodes_truenodeids               uint16(45198) (11)   
+                                                                            W: label_nodes_falsenodeids              uint16(45198) (9)    
+                                                                            W: label_class_weights                   f32(113245) (5)      
+                                                                            W: label_nb_node_by_estimator            uint16(100) (8)      
+                                                                            W: label_class_nodeids                   uint16(113245) (4)   
+                                                                            W: label_nb_class_by_estimator           uint16(100) (7)      
+                                                                            W: label_classlabels_int64s              int32(5) (6)         
+                                                                            W: label_base_values                     f32(5) (1)           
+                                                                            W: label_class_ids                       uint16(113245) (3)   
+                                                                            O: label_output0                         int32(1x1) (13)      
+                                                                            O: label_output1                         f32(1x1x5) (14)      
+------ -------------------- ---- ------------------------- ------ --------- ---------------------------------------- -------------------- 
+1      output_probability   3    ZipMap                    0      5         I: label_output1                         f32(1x1x5) (14)      
+                                                                            W: output_probability_classlabels_ints   uint8(5) (15)        
+                                                                            O: output_probability_output             f32(1x1x5x2) (16)    
+------ -------------------- ---- ------------------------- ------ --------- ---------------------------------------- -------------------- 
+
+
+
+Number of operations per c-layer
+------- ------ -------------------------------- ------- ------------- 
+c_id    m_id   name (type)                          #op          type 
+------- ------ -------------------------------- ------- ------------- 
+0       1      label (TreeEnsembleClassifier)     1,311   smul_f32_s8 
+1       3      output_probability (ZipMap)            0   smul_f32_s8 
+------- ------ -------------------------------- ------- ------------- 
+total                                             1,311 
+
+Number of operation types
+---------------- ------- ----------- 
+operation type         #           % 
+---------------- ------- ----------- 
+smul_f32_s8        1,311      100.0% 
+
+Complexity report (model)
+------ -------------------- ------------------------- ------------------------- ------ 
+m_id   name                 c_macc                    c_rom                     c_id   
+------ -------------------- ------------------------- ------------------------- ------ 
+1      label                |||||||||||||||| 100.0%   |||||||||||||||| 100.0%   [0]    
+3      output_probability   |                  0.0%   |                  0.0%   [1]    
+------ -------------------- ------------------------- ------------------------- ------ 
+macc=1,311 weights=1,313,296 act=64 ram_io=0
+ 
+ Requested memory size by section - "stm32l4" target
+ ------------------------------ ------- ----------- ------- ----- 
+ module                            text      rodata    data   bss 
+ ------------------------------ ------- ----------- ------- ----- 
+ NetworkRuntime1020_CM4_GCC.a     5,508           0       0     0 
+ network.o                          704          16   1,768   172 
+ network_data.o                      48          16      88     0 
+ lib (toolchain)*                     0           0       0     0 
+ ------------------------------ ------- ----------- ------- ----- 
+ RT total**                       6,260          32   1,856   172 
+ ------------------------------ ------- ----------- ------- ----- 
+ weights                              0   1,313,296       0     0 
+ activations                          0           0       0    64 
+ io                                   0           0       0     0 
+ ------------------------------ ------- ----------- ------- ----- 
+ TOTAL                            6,260   1,313,328   1,856   236 
+ ------------------------------ ------- ----------- ------- ----- 
+ *  toolchain objects (libm/libgcc*)
+ ** RT AI runtime objects (kernels+infrastructure)
+  
+  Summary - "stm32l4" target
+  --------------------------------------------------
+               FLASH (ro)     %*   RAM (rw)       % 
+  --------------------------------------------------
+  RT total          8,148   0.6%      2,028   96.9% 
+  --------------------------------------------------
+  TOTAL         1,321,444             2,092         
+  --------------------------------------------------
+  *  rt/total
+
+
+Generated files (7)
+---------------------------------------------------------------- 
+C:\Users\MIT\.stm32cubemx\network_output\network_data_params.h   
+C:\Users\MIT\.stm32cubemx\network_output\network_data_params.c   
+C:\Users\MIT\.stm32cubemx\network_output\network_data.h          
+C:\Users\MIT\.stm32cubemx\network_output\network_data.c          
+C:\Users\MIT\.stm32cubemx\network_output\network_config.h        
+C:\Users\MIT\.stm32cubemx\network_output\network.h               
+C:\Users\MIT\.stm32cubemx\network_output\network.c               
