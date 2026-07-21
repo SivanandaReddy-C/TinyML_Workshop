@@ -10,6 +10,10 @@ import os
 import torch
 import torch.nn as nn
 
+import time
+import numpy as np
+import pandas as pd
+
 # ==========================================================
 # Define MLP Architecture
 # ==========================================================
@@ -281,3 +285,162 @@ print("PROFILE COMPLETED SUCCESSFULLY")
 print("=" * 70)
 
 print(f"Report Saved To : {REPORT_PATH}")
+
+# ==========================================================
+# PYTORCH INFERENCE BENCHMARK
+# ==========================================================
+
+print("\n" + "=" * 70)
+print("PYTORCH INFERENCE BENCHMARK")
+print("=" * 70)
+
+# ----------------------------------------------------------
+# Benchmark Configuration
+# ----------------------------------------------------------
+
+WARMUP_RUNS = 100
+BENCHMARK_RUNS = 1000
+
+print(f"Warm-up Runs     : {WARMUP_RUNS}")
+print(f"Benchmark Runs   : {BENCHMARK_RUNS}")
+
+# ----------------------------------------------------------
+# Create Dummy Input
+# ----------------------------------------------------------
+
+dummy_input = torch.randn(1, 6)
+
+# ----------------------------------------------------------
+# Warm-up
+# ----------------------------------------------------------
+
+print("\nPerforming Warm-up...")
+
+with torch.no_grad():
+
+    for _ in range(WARMUP_RUNS):
+
+        _ = model(dummy_input)
+
+print("Warm-up Completed.")
+
+# ----------------------------------------------------------
+# Benchmark
+# ----------------------------------------------------------
+
+print("\nRunning Benchmark...")
+
+latencies = []
+
+with torch.no_grad():
+
+    for _ in range(BENCHMARK_RUNS):
+
+        start = time.perf_counter()
+
+        _ = model(dummy_input)
+
+        end = time.perf_counter()
+
+        latency_ms = (end - start) * 1000
+
+        latencies.append(latency_ms)
+
+print("Benchmark Completed.")
+
+# ----------------------------------------------------------
+# Performance Statistics
+# ----------------------------------------------------------
+
+latencies = np.array(latencies)
+
+average_latency = np.mean(latencies)
+
+minimum_latency = np.min(latencies)
+
+maximum_latency = np.max(latencies)
+
+std_latency = np.std(latencies)
+
+throughput = 1000 / average_latency
+
+# ----------------------------------------------------------
+# Display Results
+# ----------------------------------------------------------
+
+print("\n" + "=" * 70)
+print("BENCHMARK RESULTS")
+print("=" * 70)
+
+print(f"Average Latency        : {average_latency:.6f} ms")
+print(f"Minimum Latency        : {minimum_latency:.6f} ms")
+print(f"Maximum Latency        : {maximum_latency:.6f} ms")
+print(f"Latency Std Deviation  : {std_latency:.6f} ms")
+print(f"Throughput             : {throughput:.2f} samples/sec")
+
+# ----------------------------------------------------------
+# Save Latency CSV
+# ----------------------------------------------------------
+
+latency_df = pd.DataFrame({
+
+    "Inference": range(1, BENCHMARK_RUNS + 1),
+
+    "Latency_ms": latencies
+
+})
+
+latency_csv = os.path.join(
+
+    OUTPUT_DIR,
+
+    "pytorch_latency.csv"
+
+)
+
+latency_df.to_csv(
+
+    latency_csv,
+
+    index=False
+
+)
+
+# ----------------------------------------------------------
+# Save Benchmark Report
+# ----------------------------------------------------------
+
+benchmark_report = os.path.join(
+
+    OUTPUT_DIR,
+
+    "pytorch_benchmark.txt"
+
+)
+
+with open(benchmark_report, "w") as f:
+
+    f.write("PyTorch Inference Benchmark\n")
+
+    f.write("=" * 70 + "\n\n")
+
+    f.write(f"Warm-up Runs              : {WARMUP_RUNS}\n")
+
+    f.write(f"Benchmark Runs            : {BENCHMARK_RUNS}\n\n")
+
+    f.write(f"Average Latency (ms)      : {average_latency:.6f}\n")
+
+    f.write(f"Minimum Latency (ms)      : {minimum_latency:.6f}\n")
+
+    f.write(f"Maximum Latency (ms)      : {maximum_latency:.6f}\n")
+
+    f.write(f"Std Deviation (ms)        : {std_latency:.6f}\n")
+
+    f.write(f"Throughput (samples/sec)  : {throughput:.2f}\n")
+
+print("\n" + "=" * 70)
+print("BENCHMARK FILES GENERATED")
+print("=" * 70)
+
+print(f"Latency CSV      : {latency_csv}")
+print(f"Benchmark Report : {benchmark_report}")

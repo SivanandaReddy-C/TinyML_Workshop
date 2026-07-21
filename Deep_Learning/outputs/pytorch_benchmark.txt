@@ -1,0 +1,11 @@
+PyTorch Inference Benchmark
+======================================================================
+
+Warm-up Runs              : 100
+Benchmark Runs            : 1000
+
+Average Latency (ms)      : 0.023597
+Minimum Latency (ms)      : 0.020300
+Maximum Latency (ms)      : 0.132000
+Std Deviation (ms)        : 0.007217
+Throughput (samples/sec)  : 42378.09
