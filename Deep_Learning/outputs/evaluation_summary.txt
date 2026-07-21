@@ -1,0 +1,6 @@
+Project SARA
+Deep Learning Model Evaluation
+
+Accuracy : 97.91%
+Total Samples : 15000
+Model : MLP (6 -> 32 -> 16 -> 5)
