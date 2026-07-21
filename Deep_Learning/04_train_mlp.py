@@ -112,22 +112,50 @@ print("=" * 60)
 
 print(optimizer)
 
+
 # ----------------------------------------------------------
-# One Optimization Step
+# Training Configuration
 # ----------------------------------------------------------
 
-print("\nPerforming One Optimization Step...")
+EPOCHS = 20
 
-optimizer.zero_grad()
+print("\n" + "=" * 60)
+print("Training Started")
+print("=" * 60)
 
-outputs = model(features)
+# ----------------------------------------------------------
+# Training Loop
+# ----------------------------------------------------------
 
-loss = criterion(outputs, labels)
+for epoch in range(EPOCHS):
 
-loss.backward()
+    model.train()
 
-optimizer.step()
+    running_loss = 0.0
 
-print("\nOptimization Step Completed Successfully")
+    for features, labels in loader:
 
-print(f"Loss : {loss.item():.6f}")
+        # Forward Pass
+        outputs = model(features)
+
+        # Compute Loss
+        loss = criterion(outputs, labels)
+
+        # Clear Previous Gradients
+        optimizer.zero_grad()
+
+        # Backpropagation
+        loss.backward()
+
+        # Update Weights
+        optimizer.step()
+
+        running_loss += loss.item()
+
+    epoch_loss = running_loss / len(loader)
+
+    print(f"Epoch [{epoch+1:02d}/{EPOCHS}]   Loss = {epoch_loss:.6f}")
+
+print("\n" + "=" * 60)
+print("Training Completed Successfully")
+print("=" * 60)
