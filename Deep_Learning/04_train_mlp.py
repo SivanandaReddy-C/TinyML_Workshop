@@ -96,3 +96,38 @@ print(loss)
 print("\nLoss (float)")
 
 print(loss.item())
+
+# ----------------------------------------------------------
+# Optimizer
+# ----------------------------------------------------------
+
+optimizer = torch.optim.Adam(
+    model.parameters(),
+    lr=0.001
+)
+
+print("\n" + "=" * 60)
+print("Optimizer")
+print("=" * 60)
+
+print(optimizer)
+
+# ----------------------------------------------------------
+# One Optimization Step
+# ----------------------------------------------------------
+
+print("\nPerforming One Optimization Step...")
+
+optimizer.zero_grad()
+
+outputs = model(features)
+
+loss = criterion(outputs, labels)
+
+loss.backward()
+
+optimizer.step()
+
+print("\nOptimization Step Completed Successfully")
+
+print(f"Loss : {loss.item():.6f}")
