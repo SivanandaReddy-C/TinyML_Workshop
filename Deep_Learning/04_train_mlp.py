@@ -159,3 +159,20 @@ for epoch in range(EPOCHS):
 print("\n" + "=" * 60)
 print("Training Completed Successfully")
 print("=" * 60)
+
+# ----------------------------------------------------------
+# Save Trained Model
+# ----------------------------------------------------------
+
+import os
+
+os.makedirs("../Models", exist_ok=True)
+
+torch.save(
+    model.state_dict(),
+    "../Models/mlp_activity_classifier.pth"
+)
+
+print("\nModel saved successfully.")
+
+print("../Models/mlp_activity_classifier.pth")
