@@ -1,0 +1,37 @@
+FP32 ONNX MODEL VALIDATION REPORT
+============================================================
+
+Validation Status : PASSED
+
+Execution Provider
+------------------
+CPUExecutionProvider
+
+Input Information
+-----------------
+Name  : input
+Shape : ['batch_size', 6]
+Type  : tensor(float)
+
+Output Information
+------------------
+Name  : output
+Shape : ['batch_size', 5]
+Type  : tensor(float)
+
+Graph Information
+-----------------
+Graph Name        : main_graph
+IR Version        : 10
+Producer          : pytorch
+Producer Version  : 2.13.0+cpu
+Opset Version     : 17
+Nodes             : 5
+Inputs            : 1
+Outputs           : 1
+Parameters        : 6
+
+Operator Summary
+----------------
+Gemm            : 3
+Relu            : 2
