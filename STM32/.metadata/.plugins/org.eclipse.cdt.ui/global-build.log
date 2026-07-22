@@ -1,14 +1,14 @@
-17:15:04 **** Incremental Build of configuration Debug for project STM32_ClassicML_Deployment ****
+15:53:12 **** Incremental Build of configuration Debug for project MLP_FP32_Inference ****
 make -j28 all 
-arm-none-eabi-size  STM32_ClassicML_Deployment.elf 
+arm-none-eabi-size  MLP_FP32_Inference.elf 
    text	   data	    bss	    dec	    hex	filename
-1362500	   2324	   5052	1369876	 14e714	STM32_ClassicML_Deployment.elf
+  56628	   2164	   5260	  64052	   fa34	MLP_FP32_Inference.elf
 Finished building: default.size.stdout
  
-17:15:15 **** Incremental Build of configuration Debug for project STM32_ClassicML_Deployment ****
+15:53:17 **** Incremental Build of configuration Debug for project MLP_FP32_Inference ****
 make -j28 all 
-arm-none-eabi-size  STM32_ClassicML_Deployment.elf 
+arm-none-eabi-size  MLP_FP32_Inference.elf 
    text	   data	    bss	    dec	    hex	filename
-1362500	   2324	   5052	1369876	 14e714	STM32_ClassicML_Deployment.elf
+  56628	   2164	   5260	  64052	   fa34	MLP_FP32_Inference.elf
 Finished building: default.size.stdout
  
