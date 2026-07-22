@@ -196,20 +196,16 @@ int main(void)
 	  /* Normalize */
 	  Normalize_Features();
 
-	  printf("\r\nRaw Sensor Values\r\n");
+	  printf("\nRaw Sensor Values\n");
+	  printf("\nAx = %.3f  Ay = %.3f  Az = %.3f\n", Ax, Ay, Az);
+	  printf("\nGx = %.3f  Gy = %.3f  Gz = %.3f\n", Gx, Gy, Gz);
 
-	  printf("Ax = %.3f\tAy = %.3f\tAz = %.3f\r\n", Ax, Ay, Az);
-
-	  printf("Gx = %.3f\tGy = %.3f\tGz = %.3f\r\n", Gx, Gy, Gz);
-
-	  printf("\r\nNormalized Features\r\n");
-
+	  printf("\nNormalized Features\n");
 	  for(int i = 0; i < 6; i++)
 	  {
 	      printf("%.3f ", input_data[i]);
 	  }
-
-	  printf("\r\n");
+	  printf("\n");
 
 	  /* Run inference */
 	  /* Measure inference latency */
@@ -227,15 +223,6 @@ int main(void)
 
 	      total_cycles += (end - start);
 	  }
-
-	  printf("\nOutput Scores\n");
-
-	  for(int i = 0; i < 5; i++)
-	  {
-	      printf("Class %d : %.6f\r\n", i, output_data[i]);
-	  }
-
-	  printf("Predicted Class : %ld\r\n", predicted_label);
 
 	  uint32_t avg_cycles = total_cycles / 1000;
 
