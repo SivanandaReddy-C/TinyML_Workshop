@@ -168,3 +168,21 @@ for epoch in range(NUM_EPOCHS):
     )
 
 print("\nTraining Completed Successfully.")
+
+# -------------------------------------------------------
+# Save Trained Model
+# -------------------------------------------------------
+
+MODEL_DIR = PROJECT_ROOT / "Models"
+
+MODEL_DIR.mkdir(parents=True, exist_ok=True)
+
+MODEL_PATH = MODEL_DIR / "mlp_model.pth"
+
+torch.save(model.state_dict(), MODEL_PATH)
+
+print("\n" + "=" * 60)
+print("Model Saved Successfully")
+print("=" * 60)
+
+print(f"\nModel Path : {MODEL_PATH}")
