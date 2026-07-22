@@ -122,3 +122,49 @@ print(f"Epochs             : 20")
 print(f"Learning Rate      : 0.001")
 print(f"Loss Function      : CrossEntropyLoss")
 print(f"Optimizer          : Adam")
+
+# -------------------------------------------------------
+# Training Parameters
+# -------------------------------------------------------
+
+NUM_EPOCHS = 20
+
+print("\nStarting Training...\n")
+
+# -------------------------------------------------------
+# Training Loop
+# -------------------------------------------------------
+
+for epoch in range(NUM_EPOCHS):
+
+    model.train()
+
+    running_loss = 0.0
+
+    for inputs, labels in train_loader:
+
+        # Forward Pass
+        outputs = model(inputs)
+
+        # Compute Loss
+        loss = criterion(outputs, labels)
+
+        # Clear Previous Gradients
+        optimizer.zero_grad()
+
+        # Backpropagation
+        loss.backward()
+
+        # Update Weights
+        optimizer.step()
+
+        running_loss += loss.item()
+
+    epoch_loss = running_loss / len(train_loader)
+
+    print(
+        f"Epoch [{epoch+1:02d}/{NUM_EPOCHS}] "
+        f"Loss = {epoch_loss:.6f}"
+    )
+
+print("\nTraining Completed Successfully.")
