@@ -1,14 +1,14 @@
-15:53:12 **** Incremental Build of configuration Debug for project MLP_FP32_Inference ****
+16:02:23 **** Incremental Build of configuration Debug for project MLP_FP32_Inference ****
 make -j28 all 
 arm-none-eabi-size  MLP_FP32_Inference.elf 
    text	   data	    bss	    dec	    hex	filename
-  56628	   2164	   5260	  64052	   fa34	MLP_FP32_Inference.elf
+  60540	   2140	   5324	  68004	  109a4	MLP_FP32_Inference.elf
 Finished building: default.size.stdout
  
-15:53:17 **** Incremental Build of configuration Debug for project MLP_FP32_Inference ****
+16:02:27 **** Incremental Build of configuration Debug for project MLP_FP32_Inference ****
 make -j28 all 
 arm-none-eabi-size  MLP_FP32_Inference.elf 
    text	   data	    bss	    dec	    hex	filename
-  56628	   2164	   5260	  64052	   fa34	MLP_FP32_Inference.elf
+  60540	   2140	   5324	  68004	  109a4	MLP_FP32_Inference.elf
 Finished building: default.size.stdout
  

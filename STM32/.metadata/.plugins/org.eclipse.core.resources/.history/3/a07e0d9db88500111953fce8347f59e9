@@ -165,7 +165,7 @@ int main(void)
   MX_USART1_UART_Init();
   /* USER CODE BEGIN 2 */
   printf("\r\n");
-  printf("MLP STM32 Demo\r\n");
+  printf("Random Forest STM32 Demo\r\n");
 
   MX_X_CUBE_AI_Init();
   /* USER CODE END 2 */

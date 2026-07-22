@@ -165,7 +165,7 @@ int main(void)
   MX_USART1_UART_Init();
   /* USER CODE BEGIN 2 */
   printf("\r\n");
-  printf("MLP STM32 Demo\r\n");
+  printf("Random Forest STM32 Demo\r\n");
 
   MX_X_CUBE_AI_Init();
   /* USER CODE END 2 */
@@ -404,7 +404,10 @@ void AI_Run(void)
     ai_i32 batch;
 
     ai_input[0].data = AI_HANDLE_PTR(input_data);
-    ai_output[0].data = AI_HANDLE_PTR(output_data);
+
+    ai_output[0].data = AI_HANDLE_PTR(&predicted_label);
+
+    ai_output[1].data = AI_HANDLE_PTR(probabilities);
 
     batch = ai_network_run(network,
                            ai_input,
@@ -416,28 +419,11 @@ void AI_Run(void)
         return;
     }
 
-    predicted_label = 0;
-
-    for(int i = 1; i < 5; i++)
-    {
-        if(output_data[i] > output_data[predicted_label])
-        {
-            predicted_label = i;
-        }
-    }
-
-    printf("\r\n-----------------------------\r\n");
-
-    printf("Output Scores\r\n");
-
-    for(int i = 0; i < 5; i++)
-    {
-        printf("Class %d : %.6f\r\n", i, output_data[i]);
-    }
-
-    printf("-----------------------------\r\n");
+    printf("\r\n-------------------------\r\n");
 
     printf("Predicted Class : %ld\r\n", predicted_label);
+
+
 }
 /* USER CODE END 4 */
 
