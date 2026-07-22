@@ -72,12 +72,17 @@ output_name = session.get_outputs()[0].name
 # Run Inference
 # -------------------------------------------------------
 
-outputs = session.run(
-    [output_name],
-    {input_name: X_test},
-)[0]
+predictions = []
 
-predictions = np.argmax(outputs, axis=1)
+for sample in X_test:
+    sample = sample.reshape(1, 6).astype(np.float32)
+
+    output = session.run(
+        [output_name],
+        {input_name: sample}
+    )[0]
+
+    predictions.append(np.argmax(output))
 
 # -------------------------------------------------------
 # Performance Metrics

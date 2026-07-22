@@ -47,10 +47,6 @@ torch.onnx.export(
     do_constant_folding=True,
     input_names=["input"],
     output_names=["output"],
-    dynamic_axes={
-        "input": {0: "batch_size"},
-        "output": {0: "batch_size"},
-    },
 )
 
 print("=" * 60)
