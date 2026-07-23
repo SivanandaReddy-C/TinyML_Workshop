@@ -1,0 +1,10 @@
+../Core/Src/main.c:121:6:MX_X_CUBE_AI_Init	2
+../Core/Src/main.c:157:5:main	2
+../Core/Src/main.c:218:6:SystemClock_Config	4
+../Core/Src/main.c:269:13:MX_I2C1_Init	4
+../Core/Src/main.c:317:13:MX_USART1_UART_Init	5
+../Core/Src/main.c:365:13:MX_GPIO_Init	1
+../Core/Src/main.c:380:5:_write	1
+../Core/Src/main.c:387:6:AI_Run	4
+../Core/Src/main.c:415:9:Receive_Test_Sample	7
+../Core/Src/main.c:473:6:Error_Handler	1

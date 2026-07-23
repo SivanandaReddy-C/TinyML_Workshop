@@ -1,0 +1,10 @@
+11:55:24 **** Incremental Build of configuration Debug for project MLP_INT8_Inference ****
+make -j28 all 
+arm-none-eabi-size  MLP_INT8_Inference.elf 
+   text	   data	    bss	    dec	    hex	filename
+  61880	   2140	   5300	  69320	  10ec8	MLP_INT8_Inference.elf
+Finished building: default.size.stdout
+ 
+
+11:55:25 Build Finished. 0 errors, 0 warnings. (took 331ms)
+
