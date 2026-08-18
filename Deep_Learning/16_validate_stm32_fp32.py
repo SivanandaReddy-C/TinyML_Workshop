@@ -21,7 +21,7 @@ import serial
 # Serial Port Configuration
 # ==========================================================
 
-COM_PORT = "COM4"          # Change if required
+COM_PORT = "COM5"          # Change if required
 BAUD_RATE = 115200
 TIMEOUT = 2
 

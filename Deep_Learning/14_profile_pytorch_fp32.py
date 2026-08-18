@@ -4,9 +4,8 @@ import numpy as np
 import pandas as pd
 import torch
 
-from sklearn.model_selection import train_test_split
-
 from build_mlp import MLP
+
 
 # -------------------------------------------------------
 # Random Seed
@@ -17,37 +16,60 @@ SEED = 42
 torch.manual_seed(SEED)
 np.random.seed(SEED)
 
+
 # -------------------------------------------------------
 # Project Paths
 # -------------------------------------------------------
 
 PROJECT_ROOT = Path(__file__).resolve().parent.parent
 
-DATASET_PATH = PROJECT_ROOT / "Datasets" / "dataset_processed.csv"
+# Previously created test dataset
+X_TEST_PATH = Path(__file__).resolve().parent / "X_test.csv"
 
+# Trained model
 MODEL_PATH = PROJECT_ROOT / "Models" / "mlp_model.pth"
 
-# -------------------------------------------------------
-# Load Dataset
-# -------------------------------------------------------
-
-df = pd.read_csv(DATASET_PATH)
-
-X = df.drop(columns=["Label"]).values
-
-y = df["Label"].values
 
 # -------------------------------------------------------
-# Frozen Train-Test Split
+# Check Required Files
 # -------------------------------------------------------
 
-_, X_test, _, _ = train_test_split(
-    X,
-    y,
-    test_size=0.20,
-    random_state=SEED,
-    stratify=y,
-)
+if not X_TEST_PATH.exists():
+    raise FileNotFoundError(
+        f"Test feature file not found: {X_TEST_PATH}"
+    )
+
+if not MODEL_PATH.exists():
+    raise FileNotFoundError(
+        f"Trained model not found: {MODEL_PATH}"
+    )
+
+
+# -------------------------------------------------------
+# Load Previously Created Test Dataset
+# -------------------------------------------------------
+
+X_test = pd.read_csv(X_TEST_PATH)
+
+
+# -------------------------------------------------------
+# Convert to NumPy Array
+# -------------------------------------------------------
+
+X_test = X_test.values
+
+
+# -------------------------------------------------------
+# Display Test Dataset Information
+# -------------------------------------------------------
+
+print("=" * 60)
+print("Previously Created Test Dataset Loaded")
+print("=" * 60)
+
+print(f"\nTesting Samples : {len(X_test)}")
+print(f"Testing Shape   : {X_test.shape}")
+
 
 # -------------------------------------------------------
 # Convert to Tensor
@@ -58,11 +80,13 @@ X_test_tensor = torch.tensor(
     dtype=torch.float32,
 )
 
+
 # -------------------------------------------------------
 # Select One Sample
 # -------------------------------------------------------
 
 sample = X_test_tensor[0].unsqueeze(0)
+
 
 # -------------------------------------------------------
 # Load Model
@@ -78,6 +102,7 @@ model.load_state_dict(
 )
 
 model.eval()
+
 
 # -------------------------------------------------------
 # Warm-up
@@ -97,6 +122,7 @@ with torch.no_grad():
 
 print("Warm-up Completed")
 
+
 # -------------------------------------------------------
 # Profiling
 # -------------------------------------------------------
@@ -115,15 +141,19 @@ with torch.no_grad():
 
 end = time.perf_counter()
 
+
 # -------------------------------------------------------
 # Performance Metrics
 # -------------------------------------------------------
 
 total_time = end - start
 
-average_latency_ms = (total_time / NUM_RUNS) * 1000
+average_latency_ms = (
+    total_time / NUM_RUNS
+) * 1000
 
 throughput = NUM_RUNS / total_time
+
 
 # -------------------------------------------------------
 # Display Results
